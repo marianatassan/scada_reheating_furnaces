@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- 
+    IHM para o projeto de Integração de Sistemas de Automação
+    Desenvolvido por Robson Almeida de Souza
+    Data: 2025
+
+    Ordem de execução:
+    1. Iniciar o servidor Modbus (modbus/servidor/main.py)
+        executar o comando: python.exe modbus/servidor/main.py
+    2. Iniciar o cliente IHM (ihm_api.py)
+        executar o comando: python.exe ihm_api.py
+    3. Abrir o arquivo index.html em um navegador ou usar um servidor local
+        executar o comando: python -m http.server 5500
+ -->
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IHM Scada - Casa Inteligente</title>
+        
+        <link rel="stylesheet" href="style.css" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+
+    <body>
+        <header>
+
+            <h1>🏠 Scada - Casa Inteligente</h1>
+            
+        </header>
+
+        <div class="atuadores-container">
+            <div id="atuador_ar">
+                <h2> Ar Condicionado (<span class="estado">Desligado</span>)</h2>
+                <img id="img_ar" src="icons/ac_off.png" alt="Ar Condicionado" width="100" height="100">
+                <!-- <span class="estado">Desligado</span> -->
+            </div>
+            <div id="atuador_ventilador">
+                <h2> Ventilador (<span class="estado">Desligado</span>)</h2>
+                <img id="img_ventilador" src="icons/fan_off.png" alt="Ventilador" width="100" height="100">
+                <!-- <span class="estado">Desligado</span> -->
+            </div>
+            <div id="atuador_umidificador">
+                <h2> Umidificador (<span class="estado">Desligado</span>)</h2>
+                <img id="img_umidificador" src="icons/hum_off.png" alt="Umidificador" width="100" height="100">
+                <!-- <span class="estado">Desligado</span> -->
+            </div>
+            <div id="atuador_lampada">
+                <h2> Lâmpada (<span class="estado">Desligado</span>)</h2>
+                <img id="img_lampada" src="icons/lamp_off.png" alt="Lâmpada" width="100" height="100">
+                <!-- <span class="estado">Desligado</span> -->
+            </div>
+        </div>
+       
+
+        <main class="dashboard">
+
+            <div class="variable">
+            
+                <h2>🌡️ Temperatura (<span id="temperatura"> -- ºC</span>)</h2>
+                
+                <canvas id="graficoTemp"></canvas>
+
+            </div>
+
+            <div class="variable">
+            
+                <h2>💡 Luminosidade (<span id="luminosidade"> -- lx</span>)</h2>
+                
+                <canvas id="graficoLuminosidade"></canvas>
+
+            </div>
+
+            <div class="variable">
+            
+                <h2>💧 Umidade (<span id="umidade"> -- %</span>)</h2>
+                
+                <canvas id="graficoUmidade"></canvas>
+
+            </div>
+
+            <div class="variable">
+                <h2>🚶🏻 Movimento (<span id="movimento"> --- </span>)</h2>
+                <div class="alarme" id="alarmeMovimento">Movimento Detectado</div>
+                
+            </div>
+            
+        </main>
+
+        <footer>
+
+            <p>Última atualização: <span id="horaAtualizacao">--:--:--</span> </p>
+            <p>Robson Almeida de Souza</p>
+            <p>IHM desenvolvida para o projeto de Integração de Sistemas de Automação</p>
+            <p>&copy; 2025</p>
+            
+        </footer>
+
+        <audio id="somAlarme" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg?hl=pt-br" preload="auto"></audio>
+        <script src="script.js"></script>
+
+    </body>
+
+</html>
