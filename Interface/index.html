@@ -18,7 +18,7 @@
 
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>IHM Scada - Casa Inteligente</title>
+        <title>Reheating Furnaces HMI</title>
         
         <link rel="stylesheet" href="style.css" />
         <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
@@ -28,82 +28,90 @@
     </head>
 
     <body>
-        <header>
+    <header>
+        <h1>Reheating Furnaces SCADA</h1>
+    </header>
 
-            <h1>🏠 Scada - Casa Inteligente</h1>
-            
-        </header>
+    <div class="fornos-container">
 
-        <div class="atuadores-container">
-            <div id="atuador_ar">
-                <h2> Ar Condicionado (<span class="estado">Desligado</span>)</h2>
-                <img id="img_ar" src="icons/ac_off.png" alt="Ar Condicionado" width="100" height="100">
-                <!-- <span class="estado">Desligado</span> -->
+        <!-- ===================== FORNO 1 ===================== -->
+        <div class="forno">
+            <div class="forno-esquerda">
+                <img class="img-forno" src="icons/forno1.png" alt="Furnace 1" width="250" height="190">
+                <h2>Furnace 1</h2>
             </div>
-            <div id="atuador_ventilador">
-                <h2> Ventilador (<span class="estado">Desligado</span>)</h2>
-                <img id="img_ventilador" src="icons/fan_off.png" alt="Ventilador" width="100" height="100">
-                <!-- <span class="estado">Desligado</span> -->
-            </div>
-            <div id="atuador_umidificador">
-                <h2> Umidificador (<span class="estado">Desligado</span>)</h2>
-                <img id="img_umidificador" src="icons/hum_off.png" alt="Umidificador" width="100" height="100">
-                <!-- <span class="estado">Desligado</span> -->
-            </div>
-            <div id="atuador_lampada">
-                <h2> Lâmpada (<span class="estado">Desligado</span>)</h2>
-                <img id="img_lampada" src="icons/lamp_off.png" alt="Lâmpada" width="100" height="100">
-                <!-- <span class="estado">Desligado</span> -->
+
+            <div class="painel-info">
+                <p><strong>Combustível:</strong> <span id="combustivel1">Desligado</span></p>
+
+                <p><strong>Temperatura Zona 1:</strong> <span id="t_z1_f1">0°C</span></p>
+                <p><strong>Temperatura Zona 2:</strong> <span id="t_z2_f1">0°C</span></p>
+                <p><strong>Temperatura Zona 3:</strong> <span id="t_z3_f1">0°C</span></p>
+
+                <div class="linha-ajuste">
+                    <label for="setpoint_f1">Setpoint:</label>
+                    <input type="number" id="setpoint_f1" min="500" max="1350" value="1000">
+                    <button class="btn-inline">OK</button>
+                </div>
+
+                <div class="linha-ajuste">
+                    <label for="modo_f1">Modo de Operação:</label>
+                    <select id="modo_f1">
+                        <option value="manual">Manual</option>
+                        <option value="auto">Automático</option>
+                    </select>
+                    <button class="btn-inline">OK</button>
+                </div>
+
             </div>
         </div>
-       
 
-        <main class="dashboard">
 
-            <div class="variable">
-            
-                <h2>🌡️ Temperatura (<span id="temperatura"> -- ºC</span>)</h2>
-                
-                <canvas id="graficoTemp"></canvas>
-
+        <!-- ===================== FORNO 2 ===================== -->
+        <div class="forno">
+            <div class="forno-esquerda">
+                <img class="img-forno" src="icons/forno1.png" alt="Furnace 2" width="250" height="190">
+                <h2>Furnace 2</h2>
             </div>
 
-            <div class="variable">
-            
-                <h2>💡 Luminosidade (<span id="luminosidade"> -- lx</span>)</h2>
-                
-                <canvas id="graficoLuminosidade"></canvas>
+            <div class="painel-info">
+                <p><strong>Combustível:</strong> <span id="combustivel1">Desligado</span></p>
 
+                <p><strong>Temperatura Zona 1:</strong> <span id="t_z1_f2">0°C</span></p>
+                <p><strong>Temperatura Zona 2:</strong> <span id="t_z2_f2">0°C</span></p>
+                <p><strong>Temperatura Zona 3:</strong> <span id="t_z3_f2">0°C</span></p>
+
+                <div class="linha-ajuste">
+                    <label for="setpoint_f2">Setpoint:</label>
+                    <input type="number" id="setpoint_f2" min="500" max="1350" value="1000">
+                    <button class="btn-inline">OK</button>
+                </div>
+
+                <div class="linha-ajuste">
+                    <label for="modo_f2">Modo de Operação:</label>
+                    <select id="modo_f2">
+                        <option value="manual">Manual</option>
+                        <option value="auto">Automático</option>
+                    </select>
+                    <button class="btn-inline">OK</button>
+                </div>
             </div>
+        </div>
 
-            <div class="variable">
-            
-                <h2>💧 Umidade (<span id="umidade"> -- %</span>)</h2>
-                
-                <canvas id="graficoUmidade"></canvas>
 
-            </div>
+    </div>
 
-            <div class="variable">
-                <h2>🚶🏻 Movimento (<span id="movimento"> --- </span>)</h2>
-                <div class="alarme" id="alarmeMovimento">Movimento Detectado</div>
-                
-            </div>
-            
-        </main>
+    <footer>
+        <p>Mariana Pinto Ferraz Tassan</p>
+        <p>&copy; 2025</p>
+    </footer>
 
-        <footer>
+    <audio id="somAlarme" 
+           src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg?hl=pt-br" 
+           preload="auto"></audio>
 
-            <p>Última atualização: <span id="horaAtualizacao">--:--:--</span> </p>
-            <p>Robson Almeida de Souza</p>
-            <p>IHM desenvolvida para o projeto de Integração de Sistemas de Automação</p>
-            <p>&copy; 2025</p>
-            
-        </footer>
+    <script src="script.js"></script>
+</body>
 
-        <audio id="somAlarme" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg?hl=pt-br" preload="auto"></audio>
-        <script src="script.js"></script>
-
-    </body>
 
 </html>

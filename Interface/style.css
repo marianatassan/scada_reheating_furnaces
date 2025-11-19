@@ -1,8 +1,8 @@
-:root {
-    --bg-color: #f0f0f0;
-    --text-color: #333333;
+:root { 
+    --bg-color: #CCCCCC;
+    --text-color: #cccccc;
     --font-family: 'Roboto', sans-serif;
-    --bg-footer-color: #0077cc6b;
+    --bg-footer-color: #696a75;
 }
 
 body {
@@ -17,70 +17,116 @@ body {
 }
 
 header {
-    background-color: #0077cc;
-    padding: 2px;
-    font-size: 18px;
+    background-color: #696a75;
+    padding: 1px;
+    font-size: 10px;
     text-align: center;
     color: #fff;
-    font-weight: bold;
+    font-weight: normal;
 }
 
-.atuadores-container {
-    background-color: #ffffff;
+.fornos-container {
+    background-color: #cccccc;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    padding-bottom: 120px; /* garante espaço antes do footer */
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 77px;
+    justify-content: flex-start;
+    gap: 50px; /* espaçamento consistente entre fornos */
 }
 
-.atuadores-container:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 119, 204, 0.2);
+.forno {
+    display: flex;
+    flex-direction: row;       /* imagem + título à esquerda e painel à direita */
+    align-items: center;       
+    gap: 30px;                 
 }
 
-.atuadores-container h2 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: #0077cc;
+.forno-esquerda {
+    display: flex;
+    flex-direction: column;    
+    align-items: center;
 }
 
-.atuadores-container span {
-    font-size: 20px;
+.forno-esquerda h2 {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #000;
+}
+
+/* garante que cada imagem mantenha mesmo espaço */
+.img-forno {
+    margin-right: 30px;
+}
+
+/* 🔥 Painel corrigido: alinhamento + espaçamento uniforme */
+.painel-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 14px;       /* era 15px 20px */
+    border-radius: 6px;       /* opcional: menor borda */
+    color: #000;
+    min-width: 240px;         /* era 260px */
+    gap: 6px;                 /* compacta distância entre linhas */
+}
+
+/* Inputs e labels */
+.painel-info label {
     font-weight: bold;
-    margin: 20;
-    color: var(--text-color);
+    margin-top: 4px;     /* era 8px */
+    font-size: 12px;
 }
 
-.variable {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.painel-info p {
+    margin-top: 2px;     /* era 8px */
+    font-size: 12px;     /* opcional: deixa mais compacto */
 }
 
-.variable:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 119, 204, 0.2);
+/* inputs e selects corrigidos */
+.painel-info input {
+    height: 14px;
+    padding: 3px 5px;
+    margin: 0;
 }
 
-.variable h2 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: #0077cc;
+.painel-info select {
+    height: 26px;
+    padding: 3px 5px;
+    margin: 0;
 }
 
-.variable span {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20;
-    color: var(--text-color);
+/* 🔥 Lógica de alinhamento dos inputs */
+.linha-ajuste {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;       
+}
+
+.linha-ajuste label {
+    white-space: nowrap;
+}
+
+/* Botões */
+.btn-inline {
+    height: 23px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background: white;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+.fornos-container h2 {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #000000;
 }
 
 .alarme { 
@@ -99,15 +145,13 @@ header {
 
 footer {
     background-color: var(--bg-footer-color);
-    padding: 5px;
+    padding: 1px;
     text-align: center;
-    color: #555;
+    color: #cccccc;
     font-size: 10px;
-}
-
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 10px;
+    width: 100%;
+    height: 56px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
