@@ -28,22 +28,23 @@ header {
 .fornos-container {
     background-color: #cccccc;
     padding: 20px;
-    padding-bottom: 120px; /* garante espaço antes do footer */
+    padding-bottom: 100px; /* garante espaço antes do footer */
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 77px;
+    padding-left: 45px;
     justify-content: flex-start;
-    gap: 50px; /* espaçamento consistente entre fornos */
+    gap: 45px; /* espaçamento consistente entre fornos */
 }
 
 .forno {
     display: flex;
     flex-direction: row;       /* imagem + título à esquerda e painel à direita */
     align-items: center;       
-    gap: 30px;                 
+    gap: 30px;  
+    color: #333;               
 }
 
 .forno-esquerda {
@@ -54,13 +55,13 @@ header {
 
 .forno-esquerda h2 {
     margin-top: 8px;
-    font-size: 14px;
-    color: #000;
+    font-size: 16px;
+    color: #333;
 }
 
 /* garante que cada imagem mantenha mesmo espaço */
 .img-forno {
-    margin-right: 30px;
+    margin-right: 10px;
 }
 
 /* 🔥 Painel corrigido: alinhamento + espaçamento uniforme */
@@ -68,35 +69,37 @@ header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 14px;       /* era 15px 20px */
+    padding: 10px 0;
     border-radius: 6px;       /* opcional: menor borda */
     color: #000;
-    min-width: 240px;         /* era 260px */
-    gap: 6px;                 /* compacta distância entre linhas */
+    align-items: flex-start; 
+    justify-content: flex-start;
+    gap: 5px;                 /* compacta distância entre linhas */
 }
 
 /* Inputs e labels */
 .painel-info label {
-    font-weight: bold;
-    margin-top: 4px;     /* era 8px */
-    font-size: 12px;
+    font-weight: normal;
+    margin-top: 4px;     
+    font-size: 14px;
 }
 
 .painel-info p {
-    margin-top: 2px;     /* era 8px */
-    font-size: 12px;     /* opcional: deixa mais compacto */
+    font-weight: normal;
+    margin-top: 2px;     
+    font-size: 14px;
 }
 
 /* inputs e selects corrigidos */
 .painel-info input {
     height: 14px;
-    padding: 3px 5px;
+    padding: 3px 0px;
     margin: 0;
 }
 
 .painel-info select {
     height: 26px;
-    padding: 3px 5px;
+    padding: 3px 0;
     margin: 0;
 }
 
@@ -115,18 +118,12 @@ header {
 /* Botões */
 .btn-inline {
     height: 23px;
-    padding: 3px 10px;
+    padding: 3px 8px;
     border-radius: 5px;
     background: white;
     border: none;
     color: black;
     cursor: pointer;
-}
-
-.fornos-container h2 {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #000000;
 }
 
 .alarme { 
@@ -141,6 +138,37 @@ header {
 @keyframes blink { 
     0%, 100% {opacity: 1;}
     50% {opacity: 0.5;}
+}
+
+.graficos-container {
+    width: 800px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    margin-top: 16px;
+    margin-left: 18px;
+    gap: 0 53px;
+}
+
+.grafico-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.grafico-legenda {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+}
+
+/* cada card do gráfico */
+.graficos-container canvas {
+    background: white;
+    border-radius: 5px;
+    width: 125% !important;
+    height: 160px !important;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
 
 footer {

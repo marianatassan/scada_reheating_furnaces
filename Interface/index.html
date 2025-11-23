@@ -1,17 +1,5 @@
 <!DOCTYPE html>
-<!-- 
-    IHM para o projeto de Integração de Sistemas de Automação
-    Desenvolvido por Robson Almeida de Souza
-    Data: 2025
 
-    Ordem de execução:
-    1. Iniciar o servidor Modbus (modbus/servidor/main.py)
-        executar o comando: python.exe modbus/servidor/main.py
-    2. Iniciar o cliente IHM (ihm_api.py)
-        executar o comando: python.exe ihm_api.py
-    3. Abrir o arquivo index.html em um navegador ou usar um servidor local
-        executar o comando: python -m http.server 5500
- -->
 <html lang="en">
 
     <head>
@@ -42,11 +30,10 @@
             </div>
 
             <div class="painel-info">
-                <p><strong>Combustível:</strong> <span id="combustivel1">Desligado</span></p>
-
-                <p><strong>Temperatura Zona 1:</strong> <span id="t_z1_f1">0°C</span></p>
-                <p><strong>Temperatura Zona 2:</strong> <span id="t_z2_f1">0°C</span></p>
-                <p><strong>Temperatura Zona 3:</strong> <span id="t_z3_f1">0°C</span></p>
+                <p>Combustível: <span id="combustivel1">Desligado</span></p>
+                <p>Temperatura Zona 1: <span id="t_z1_f1">0°C</span></p>
+                <p>Temperatura Zona 2: <span id="t_z2_f1">0°C</span></p>
+                <p>Temperatura Zona 3: <span id="t_z3_f1">0°C</span></p>
 
                 <div class="linha-ajuste">
                     <label for="setpoint_f1">Setpoint:</label>
@@ -62,8 +49,32 @@
                     </select>
                     <button class="btn-inline">OK</button>
                 </div>
+            </div>
+            <!-- ================= GRÁFICOS DO FORNO 1 ================= -->
+            <div class="graficos-container">
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-z1"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 1</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-z2"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 2</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-z3"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 3</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-sp"></canvas>
+                    <p class="grafico-legenda">Setpoint</p>
+                </div>
 
             </div>
+            <div class="alarme" id="alarme_f1">⚠ Setpoint fora da faixa permitida!</div>
         </div>
 
 
@@ -75,11 +86,10 @@
             </div>
 
             <div class="painel-info">
-                <p><strong>Combustível:</strong> <span id="combustivel1">Desligado</span></p>
-
-                <p><strong>Temperatura Zona 1:</strong> <span id="t_z1_f2">0°C</span></p>
-                <p><strong>Temperatura Zona 2:</strong> <span id="t_z2_f2">0°C</span></p>
-                <p><strong>Temperatura Zona 3:</strong> <span id="t_z3_f2">0°C</span></p>
+                <p>Combustível: <span id="combustivel1">Desligado</span></p>
+                <p>Temperatura Zona 1: <span id="t_z1_f2">0°C</span></p>
+                <p>Temperatura Zona 2: <span id="t_z2_f2">0°C</span></p>
+                <p>Temperatura Zona 3: <span id="t_z3_f2">0°C</span></p>
 
                 <div class="linha-ajuste">
                     <label for="setpoint_f2">Setpoint:</label>
@@ -95,7 +105,34 @@
                     </select>
                     <button class="btn-inline">OK</button>
                 </div>
+
             </div>
+            <!-- ================= GRÁFICOS DO FORNO 2 ================= -->
+            <div class="graficos-container">
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f2-z1"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 1</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f2-z2"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 2</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f2-z3"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 3</p>
+                </div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f2-sp"></canvas>
+                    <p class="grafico-legenda">Setpoint</p>
+                </div>
+
+            </div>
+            <div class="alarme" id="alarme_f2">⚠ Setpoint fora da faixa permitida!</div>
+
         </div>
 
 
