@@ -3,8 +3,8 @@ import random
 from datetime import datetime, timedelta
 
 # --- Configuração ---
-DB_FILE = "house_database.db"
-TABLE_NAME = "house"
+DB_FILE = "furnaces_database.db"
+TABLE_NAME = "furnace_data"
 
 def create_24h_custom_data():
     """

@@ -1,98 +1,108 @@
 import time
-
 from datetime import datetime
-from pyModbusTCP.client import ModbusClient
 from threading import Thread
+
+from pyModbusTCP.client import ModbusClient
 from pyModbusTCP.utils import decode_ieee, word_list_to_long
-from house_dao import HouseDAO
+
+from furnace_dao import FurnaceDAO
+
 
 class ClienteModBus:
-    def __init__(self, server_ip: str, porta: int, tags_adress: dict, read_time: int, db_path: str) -> None:
+    def __init__(self, server_ip: str, porta: int, tags_address: dict, read_time: int, db_path: str):
         
-        self._client = ModbusClient(host=server_ip, port=porta) # Cliente Modbus TCP
+        self._client = ModbusClient(host=server_ip, port=porta)
+        self.tags_address = tags_address
+        self.read_time = read_time
+        self.db_path = db_path
+        
+        self._threads = []
 
-        self.tags_adress = tags_adress # Dicionário com os endereços das tags
-        self.read_time = read_time # Tempo de leitura em segundos
 
-        self._threads = [] # Lista para armazenar as threads
-
-        self.db_path = db_path  # Caminho do banco de dados
-
+    # ============================================================
+    # LEITURA CONTÍNUA DO MODBUS
+    # ============================================================
     def get_data(self):
+
         try:
-            print('\n Obtendo dados do servidor Modbus...')
-
+            print("\nConectando ao servidor Modbus...")
             self._client.open()
+            print(f"Conectado em {self._client.host}:{self._client.port}")
 
-            print(f"\nConectado ao servidor Modbus em {self._client.host}:{self._client.port}")
-
+            dao = FurnaceDAO(self.db_path)
             data = {}
-
             while True:
-                data['timestamp'] = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 
-                for tag_name in self.tags_adress:
-                    
-                    tag_adress = self.tags_adress[tag_name]
+                data["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                    if tag_name == 'temperature' or tag_name == 'humidity':
+                for tag, adress in self.tags_address.items():
 
-                        reg_list = self._client.read_holding_registers(tag_adress, 2)
-                        
-                        reg_list = word_list_to_long(reg_list, big_endian=True)
-                        
-                        data[tag_name] = decode_ieee(reg_list[0])
-                    
-                    else:
-                        data[tag_name] = self._client.read_holding_registers(tag_adress, 1)[0]
+                    # FLOAT (Temperaturas)
+                    if "temp" in tag:
+                        regs = self._client.read_holding_registers(adress, 2)
+                        regs = word_list_to_long(regs, big_endian=True)
+                        data[tag] = decode_ieee(regs[0])
 
-                print(f"\nDados: {data}")
+                    # BOOLEANO (Combustível)
+                    elif "fuel" in tag:
+                        data[tag] = int(self._client.read_holding_registers(adress, 1)[0])
 
-                # Insere os dados no banco de dados
-                casa_automatizada = HouseDAO(self.db_path)  
-                casa_automatizada.insert_house_data(data)
+                    # FLOAT (Setpoints)
+                    elif "setpoint" in tag:
+                        regs = self._client.read_holding_registers(adress, 2)
+                        regs = word_list_to_long(regs, big_endian=True)
+                        data[tag] = decode_ieee(regs[0])
+
+                    # INTEIRO (Modo)
+                    elif "mode" in tag:
+                        data[tag] = int(self._client.read_holding_registers(adress, 1)[0])
+
+                print(f"\nDADOS COLETADOS:\n{data}")
+
+                # Insere no banco de dados
+                dao.insert_furnace_data(data)
 
                 time.sleep(self.read_time)
 
         except Exception as e:
-            print(f"\n\nErro ao conectar ao servidor Modbus: {e}")
-            return None
-        
-    def run(self):
+            print(f"Erro ao obter dados do servidor Modbus: {e}")
 
-        self._threads.append(
-            Thread(target=self.get_data)
-        )
+
+    # ============================================================
+    # INICIA A THREAD
+    # ============================================================
+    def run(self):
+        print("\nIniciando thread de leitura Modbus...")
+        self._threads.append(Thread(target=self.get_data))
 
         for t in self._threads:
-            print("\nIniciando thread")
             t.start()
 
-    def ler_modbus_uma_vez(self):
+
+    # ============================================================
+    # LEITURA ÚNICA (para testes)
+    # ============================================================
+    def read_once(self):
         try:
             self._client.open()
+            dao = FurnaceDAO(self.db_path)
+
             data = {}
+            data["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            data['timestamp'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            for tag, adress in self.tags_address.items():
 
-            for tag_name in self.tags_adress:
-                tag_adress = self.tags_adress[tag_name]
+                if "temp" in tag or "setpoint" in tag:
+                    regs = self._client.read_holding_registers(adress, 2)
+                    regs = word_list_to_long(regs, big_endian=True)
+                    data[tag] = decode_ieee(regs[0])
 
-                if tag_name in ['temperature', 'humidity']:
-                    reg_list = self._client.read_holding_registers(tag_adress, 2)
-                    reg_list = word_list_to_long(reg_list, big_endian=True)
-                    data[tag_name] = decode_ieee(reg_list[0])
                 else:
-                    data[tag_name] = self._client.read_holding_registers(tag_adress, 1)[0]
+                    data[tag] = int(self._client.read_holding_registers(adress, 1)[0])
 
-            # Converte movimento para booleano
-            data['movement'] = bool(data['movement'])
-
-            casa_automatizada = HouseDAO(self.db_path)  
-            casa_automatizada.insert_house_data(data)
-
+            dao.insert_furnace_data(data)
             return data
 
         except Exception as e:
-            print(f"Erro na leitura única Modbus: {e}")
-        return None
+            print(f"Erro na leitura única: {e}")
+            return None
