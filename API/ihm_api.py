@@ -6,6 +6,7 @@ from furnace_dao import FurnaceDAO
 from cliente import ClienteModBus
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 
 # ============================================================
 #   SCHEMA DO RETORNO (igual ao do Robson, mas com seus dados)
@@ -113,6 +114,49 @@ def get_last_data():
 
     return row
 
+# ============================================================
+#   POST SETPOINT (somente manual)
+# ============================================================
+@app.post("/setpoint")
+def set_setpoint(payload: dict):
+    forno = payload.get("forno")
+    sp = payload.get("setpoint")
+
+    if forno not in [1, 2]:
+        raise HTTPException(400, "Forno inválido.")
+
+    setpoint_addr = 1007 if forno == 1 else 1017
+    mode_addr = 1009 if forno == 1 else 1019
+
+    modo = cliente.read_holding_registers(mode_addr, 1).registers[0]
+
+    if modo == 1:
+        raise HTTPException(403, "Modo automático — alteração bloqueada.")
+
+    cliente.write_register(setpoint_addr, int(sp))
+
+    return {"status": "ok"}
+
+
+# ============================================================
+#   POST MODO
+# ============================================================
+@app.post("/mode")
+def change_mode(payload: dict):
+    forno = payload.get("forno")
+    modo = payload.get("modo")  # 1 auto | 2 manual
+
+    if forno not in [1, 2]:
+        raise HTTPException(400, "Forno inválido.")
+
+    if modo not in [1, 2]:
+        raise HTTPException(400, "Modo inválido.")
+
+    mode_addr = 1009 if forno == 1 else 1019
+
+    cliente.write_register(mode_addr, int(modo))
+
+    return {"status": "ok"}
 
 # ============================================================
 #   EXECUÇÃO
