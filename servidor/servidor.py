@@ -86,11 +86,12 @@ class ServidorModBus:
             self._server.data_bank.set_holding_registers(1009, [f1_mode])
 
             # Furnace 2
-            self._server.data_bank.set_holding_registers(1100, encode_float(f2_temp_z1))
-            self._server.data_bank.set_holding_registers(1102, encode_float(f2_temp_z2))
-            self._server.data_bank.set_holding_registers(1104, encode_float(f2_temp_z3))
-            self._server.data_bank.set_holding_registers(1106, [f2_fuel])
-            self._server.data_bank.set_holding_registers(1107, encode_float(f2_setpoint))
-            self._server.data_bank.set_holding_registers(1109, [f2_mode])
+            self._server.data_bank.set_holding_registers(1010, encode_float(f2_temp_z1))
+            self._server.data_bank.set_holding_registers(1012, encode_float(f2_temp_z2))
+            self._server.data_bank.set_holding_registers(1014, encode_float(f2_temp_z3))
+            self._server.data_bank.set_holding_registers(1016, [f2_fuel])
+            self._server.data_bank.set_holding_registers(1017, encode_float(f2_setpoint))
+            self._server.data_bank.set_holding_registers(1019, [f2_mode])
+
 
             time.sleep(sleep_time)

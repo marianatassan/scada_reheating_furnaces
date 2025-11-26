@@ -18,14 +18,12 @@ class FurnaceData(BaseModel):
     f1_fuel_state: int
     f1_setpoint: float
     f1_mode_operation: int
-
     f2_temp_zone1: float
     f2_temp_zone2: float
     f2_temp_zone3: float
     f2_fuel_state: int
     f2_setpoint: float
     f2_mode_operation: int
-
     timestamp: str
 
 
@@ -56,7 +54,6 @@ cliente = ClienteModBus(
         "f1_fuel_state": 1006,
         "f1_setpoint": 1007,
         "f1_mode_operation": 1009,
-
         "f2_temp_zone1": 1010,
         "f2_temp_zone2": 1012,
         "f2_temp_zone3": 1014,
@@ -101,14 +98,12 @@ def get_last_data():
             "f1_fuel_state": None,
             "f1_setpoint": None,
             "f1_mode_operation": None,
-
             "f2_temp_zone1": None,
             "f2_temp_zone2": None,
             "f2_temp_zone3": None,
             "f2_fuel_state": None,
             "f2_setpoint": None,
             "f2_mode_operation": None,
-
             "timestamp": None
         }
 
