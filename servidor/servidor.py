@@ -26,7 +26,7 @@ class ServidorModBus:
             f1_temp_z3 = random.uniform(700, 900)
             f1_fuel = random.choice([0, 1])         # ligado/desligado
             f1_setpoint = random.uniform(750, 850)
-            f1_mode = random.choice([0, 1])         # 0=manual, 1=automático
+            f1_mode = random.choice([1, 2])         # 1=automático, 2=manual
 
             # -------- Furnace 2 --------
             f2_temp_z1 = random.uniform(700, 900)
@@ -34,7 +34,7 @@ class ServidorModBus:
             f2_temp_z3 = random.uniform(700, 900)
             f2_fuel = random.choice([0, 1])
             f2_setpoint = random.uniform(750, 850)
-            f2_mode = random.choice([0, 1])
+            f2_mode = random.choice([1, 2])
 
 
             # =======================================================

@@ -13,7 +13,7 @@ const MAX_POINTS = 60;
 
 // Limites realísticos (ajuste se necessário)
 const TEMP_MIN = 500;   // °C
-const TEMP_MAX = 1250;  // °C
+const TEMP_MAX = 1350;  // °C
 
 // Helpers para DOM
 const $ = id => document.getElementById(id);
@@ -87,27 +87,9 @@ const counters = {
 };
 
 // ----------------------- Utilitários UI -----------------------
-function showAlarmDiv(forno, message) {
-    const id = forno === 1 ? "alarme_f1" : "alarme_f2";
-    const el = $(id);
-    if (el) {
-        el.style.display = "block";
-        el.innerText = `⚠ ${message}`;
-        try { alarmAudio.currentTime = 0; alarmAudio.play(); } catch (e) { /* autoplay bloqueado possivelmente */ }
-    } else {
-        // fallback popup
-        try { alarmAudio.play(); } catch (e) {}
-        alert(`Forno ${forno} — ${message}`);
-    }
-}
-
-function hideAlarmDiv(forno) {
-    const id = forno === 1 ? "alarme_f1" : "alarme_f2";
-    const el = $(id);
-    if (el) {
-        el.style.display = "none";
-        // não para o áudio aqui porque outro forno pode estar em alarme; controle externo poderia gerenciar isso
-    }
+function showAlarmPopup(forno, message) {
+    try { alarmAudio.currentTime = 0; alarmAudio.play(); } catch (e) {}
+    alert(`⚠ Forno ${forno}: ${message}`);
 }
 
 function applyModeUI(forno, modeNum, setpointFromServer) {
@@ -138,32 +120,21 @@ async function getLatest() {
     return resp.json();
 }
 
-async function postSetpoint(forne, value) {
-    const resp = await fetch(API_BASE + SETPOINT_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ forno: forne, setpoint: Number(value) }) // note: 'forne' bug prevention below
-    });
-    return resp;
+// Recomendado: helper seguro e usado pelos handlers
+async function postSetpointSafe(forno, value) {
+  return fetch(API_BASE + SETPOINT_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ forno: Number(forno), setpoint: Number(value) })
+  });
 }
-
-async function postSetpointFixed(forne, value) {
-    // helper that uses correct key name 'forno' (typo safe)
-    return await fetch(API_BASE + SETPOINT_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ forno: forne, setpoint: Number(value) }) // will still fail if 'forne' not defined
-    });
-}
-
-// We'll not use the above broken helpers. Use explicit implementation in event handlers.
 
 // Mode change
-async function postMode(forne, modoNum) {
+async function postMode(forno, modoNum) {
     const resp = await fetch(API_BASE + MODE_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ forno: forne, modo: Number(modoNum) })
+        body: JSON.stringify({ forno: forno, modo: Number(modoNum) })
     });
     return resp;
 }
@@ -205,11 +176,11 @@ async function updateDashboard() {
         // Update fuel text & icons
         if (last.f1.fuel != null) {
             $("combustivel1").innerText = last.f1.fuel === 1 ? "Ligado" : "Desligado";
-            $("icon_comb1").src = last.f1.fuel === 1 ? "icons/combustivel_ligado.png" : "icons/combustivel_desligado.png";
+            $("icon_comb1").src = last.f1.fuel === 1 ? "./icons/combustivel_ligado.png" : "./icons/combustivel_desligado.png";
         }
         if (last.f2.fuel != null) {
             $("combustivel2").innerText = last.f2.fuel === 1 ? "Ligado" : "Desligado";
-            $("icon_comb2").src = last.f2.fuel === 1 ? "icons/combustivel_ligado.png" : "icons/combustivel_desligado.png";
+            $("icon_comb2").src = last.f2.fuel === 1 ? "./icons/combustivel_ligado.png" : "./icons/combustivel_desligado.png";
         }
 
         // apply mode UI (block/unblock input)
@@ -239,13 +210,13 @@ async function updateDashboard() {
                            (last.f2.z3 < TEMP_MIN || last.f2.z3 > TEMP_MAX);
 
         if (f1Critical) {
-            showAlarmDiv(1, `Temperatura fora dos limites (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
+            showAlarmPopup(1, `Temperatura fora dos limites (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
         } else {
             hideAlarmDiv(1);
         }
 
         if (f2Critical) {
-            showAlarmDiv(2, `Temperatura fora dos limites (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
+            showAlarmPopup(2, `Temperatura fora dos limites (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
         } else {
             hideAlarmDiv(2);
         }
@@ -256,7 +227,7 @@ async function updateDashboard() {
                            (last.f1.z2 > last.f1.setpoint + 50) ||
                            (last.f1.z3 > last.f1.setpoint + 50);
             if (f1Over) {
-                showAlarmDiv(1, `EMERGÊNCIA F1: Zona excedeu setpoint em +50°C.`);
+                showAlarmPopup(1, `EMERGÊNCIA F1: Zona excedeu setpoint em +50°C.`);
             }
         }
 
@@ -265,7 +236,7 @@ async function updateDashboard() {
                            (last.f2.z2 > last.f2.setpoint + 50) ||
                            (last.f2.z3 > last.f2.setpoint + 50);
             if (f2Over) {
-                showAlarmDiv(2, `EMERGÊNCIA F2: Zona excedeu setpoint em +50°C.`);
+                showAlarmPopup(2, `EMERGÊNCIA F2: Zona excedeu setpoint em +50°C.`);
             }
         }
 
@@ -282,7 +253,7 @@ async function updateDashboard() {
             if (last.f1.mode === 1 && devF1 > devThreshold) {
                 counters.f1.deviation++;
                 if (counters.f1.deviation >= devConsecLimit) {
-                    showAlarmDiv(1, "ALERTA MANUTENÇÃO F1: desvios persistentes em automático.");
+                    showAlarmPopup(1, "ALERTA MANUTENÇÃO F1: desvios persistentes em automático.");
                 }
             } else {
                 counters.f1.deviation = 0;
@@ -298,39 +269,53 @@ async function updateDashboard() {
             if (last.f2.mode === 1 && devF2 > devThreshold) {
                 counters.f2.deviation++;
                 if (counters.f2.deviation >= devConsecLimit) {
-                    showAlarmDiv(2, "ALERTA MANUTENÇÃO F2: desvios persistentes em automático.");
+                    showAlarmPopup(2, "ALERTA MANUTENÇÃO F2: desvios persistentes em automático.");
                 }
             } else {
                 counters.f2.deviation = 0;
             }
         }
 
-        // -------- Regra 4: Estabilidade -> ±5°C por 10 leituras consecutivas -----------
+        // -------- Regra 4: Estabilidade -> ±5°C por 10 leituras consecutivas (POP-UP) --------
         const stableThreshold = 5;
         const stableCountNeeded = 10;
 
+        // F1
         if (last.f1.setpoint != null) {
             const stableF1 = Math.max(
                 Math.abs(last.f1.z1 - last.f1.setpoint),
                 Math.abs(last.f1.z2 - last.f1.setpoint),
                 Math.abs(last.f1.z3 - last.f1.setpoint)
             ) <= stableThreshold;
+
             if (stableF1) {
                 counters.f1.stable++;
-                if (counters.f1.stable >= stableCountNeeded) {
-                    // Exibe mensagem não intrusiva no div de alarme (pode trocar para outro elemento)
-                    const el = $("alarme_f1");
-                    if (el) {
-                        el.style.display = "block";
-                        el.innerText = "F1: Estável (±5°C do setpoint)";
-                        el.style.backgroundColor = "#2ecc71"; // verde suave
-                        setTimeout(() => { if (el) { el.style.backgroundColor = ""; } }, 5000);
-                    }
+                if (counters.f1.stable === stableCountNeeded) {
+                    alert("✔ Forno 1 estabilizado (±5°C do setpoint).");
                 }
             } else {
                 counters.f1.stable = 0;
             }
         }
+
+        // F2
+        if (last.f2.setpoint != null) {
+            const stableF2 = Math.max(
+                Math.abs(last.f2.z1 - last.f2.setpoint),
+                Math.abs(last.f2.z2 - last.f2.setpoint),
+                Math.abs(last.f2.z3 - last.f2.setpoint)
+            ) <= stableThreshold;
+
+            if (stableF2) {
+                counters.f2.stable++;
+                if (counters.f2.stable === stableCountNeeded) {
+                    alert("✔ Forno 2 estabilizado (±5°C do setpoint).");
+                }
+            } else {
+                counters.f2.stable = 0;
+            }
+        }
+
 
         if (last.f2.setpoint != null) {
             const stableF2 = Math.max(

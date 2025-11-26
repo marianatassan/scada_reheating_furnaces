@@ -106,3 +106,8 @@ class ClienteModBus:
         except Exception as e:
             print(f"Erro na leitura única: {e}")
             return None
+        finally:
+            try:
+                self._client.close()
+            except:
+                pass

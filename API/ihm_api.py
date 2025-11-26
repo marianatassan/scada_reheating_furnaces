@@ -65,11 +65,11 @@ cliente = ClienteModBus(
         "f2_mode_operation": 1019,
     },
     read_time=5,
-    db_path="furnace_database.db"
+    db_path="furnaces_database.db"
 )
 
 
-FurnaceDB = FurnaceDAO("furnace_database.db")
+FurnaceDB = FurnaceDAO("furnaces_database.db")
 
 
 # ============================================================
