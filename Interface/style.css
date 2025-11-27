@@ -83,51 +83,15 @@ header {
 }
 
 .painel-info p {
+    align-items: flex-start;
     font-weight: normal;
     margin-top: 2px;     
     font-size: 14px;
 }
 
-/* inputs e selects corrigidos */
-.painel-info input {
-    height: 14px;
-    padding: 3px 0px;
-    margin: 0;
-}
-
-.painel-info select {
-    height: 26px;
-    padding: 3px 0;
-    margin: 0;
-}
-
-.linha-ajuste {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;       
-}
-
-.linha-ajuste label {
-    white-space: nowrap;
-}
-
-/* Botões */
-.btn-inline {
-    height: 23px;
-    padding: 3px 8px;
-    border-radius: 5px;
-    margin-right: 4px;
-    background: white;
-    border: none;
-    color: black;
-    cursor: pointer;
-}
-
 .img-combustivel {
     align-items: flex-end;
 }
-
 
 .alarme { 
     background-color: #ff4c4c;
@@ -146,9 +110,10 @@ header {
 .graficos-container {
     width: 800px;
     display: grid;
+    position: fixed;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     margin-top: 16px;
-    margin-left: 12px;
+    margin-left: 560px;
     gap: 0 53px;
 }
 

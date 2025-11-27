@@ -25,17 +25,15 @@ class FurnaceDAO:
             data = {
                 "f1_temp_zone1": row[1],
                 "f1_temp_zone2": row[2],
-                "f1_temp_zone3": row[3],
-                "f1_fuel_state": row[4],
+                "f1_fuel_state": row[3],
+                "f1_vel_motor": row[4],
                 "f1_setpoint": row[5],
-                "f1_mode_operation": row[6],
-                "f2_temp_zone1": row[7],
-                "f2_temp_zone2": row[8],
-                "f2_temp_zone3": row[9],
-                "f2_fuel_state": row[10],
-                "f2_setpoint": row[11],
-                "f2_mode_operation": row[12],
-                "timestamp": row[13]
+                "f2_temp_zone1": row[6],
+                "f2_temp_zone2": row[7],
+                "f2_fuel_state": row[8],
+                "f2_vel_motor": row[9],
+                "f2_setpoint": row[10],
+                "timestamp": row[11]
             }
 
             return data
@@ -79,12 +77,6 @@ class FurnaceDAO:
         """
         Insere uma nova linha em furnace_data.
 
-        Espera um dicionário com as chaves:
-            f1_temp_zone1, f1_temp_zone2, f1_temp_zone3,
-            f1_fuel_state, f1_setpoint, f1_mode_operation,
-            f2_temp_zone1, f2_temp_zone2, f2_temp_zone3,
-            f2_fuel_state, f2_setpoint, f2_mode_operation,
-            timestamp (opcional)
         """
         try:
             conn = sqlite3.connect(self.db_path)
@@ -92,28 +84,26 @@ class FurnaceDAO:
 
             insert_query = """
             INSERT INTO furnace_data (
-                f1_temp_zone1, f1_temp_zone2, f1_temp_zone3,
-                f1_fuel_state, f1_setpoint, f1_mode_operation,
-                f2_temp_zone1, f2_temp_zone2, f2_temp_zone3,
-                f2_fuel_state, f2_setpoint, f2_mode_operation,
+                f1_temp_zone1, f1_temp_zone2,
+                f1_fuel_state, f1_vel_motor, f1_setpoint,
+                f2_temp_zone1, f2_temp_zone2,
+                f2_fuel_state, f2_vel_motor, f2_setpoint,
                 timestamp
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             cursor.execute(insert_query, (
                 data["f1_temp_zone1"],
                 data["f1_temp_zone2"],
-                data["f1_temp_zone3"],
                 data["f1_fuel_state"],
+                data["f1_vel_motor"],
                 data["f1_setpoint"],
-                data["f1_mode_operation"],
                 data["f2_temp_zone1"],
                 data["f2_temp_zone2"],
-                data["f2_temp_zone3"],
                 data["f2_fuel_state"],
+                data["f2_vel_motor"],
                 data["f2_setpoint"],
-                data["f2_mode_operation"],
                 data.get("timestamp", None)
             ))
 

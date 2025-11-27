@@ -46,16 +46,18 @@ class ClienteModBus:
                     # BOOLEANO (Combustível)
                     elif "fuel" in tag:
                         data[tag] = int(self._client.read_holding_registers(adress, 1)[0])
+                    
+                     # FLOAT (Velocidade)
+                    elif "vel" in tag:
+                        regs = self._client.read_holding_registers(adress, 2)
+                        regs = word_list_to_long(regs, big_endian=True)
+                        data[tag] = decode_ieee(regs[0])
 
                     # FLOAT (Setpoints)
                     elif "setpoint" in tag:
                         regs = self._client.read_holding_registers(adress, 2)
                         regs = word_list_to_long(regs, big_endian=True)
                         data[tag] = decode_ieee(regs[0])
-
-                    # INTEIRO (Modo)
-                    elif "mode" in tag:
-                        data[tag] = int(self._client.read_holding_registers(adress, 1)[0])
 
                 print(f"\nDADOS COLETADOS:\n{data}")
 
@@ -92,7 +94,7 @@ class ClienteModBus:
 
             for tag, adress in self.tags_address.items():
 
-                if "temp" in tag or "setpoint" in tag:
+                if "temp" in tag or "vel" in tag or "setpoint" in tag:
                     regs = self._client.read_holding_registers(adress, 2)
                     regs = word_list_to_long(regs, big_endian=True)
                     data[tag] = decode_ieee(regs[0])

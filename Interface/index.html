@@ -31,24 +31,11 @@
 
                 <div class="painel-info">
                     <p>Combustível: <span id="combustivel1">Desligado</span><img id="icon_comb1" class="img-combustivel" src="icons/combustivel_desligado.png" alt="Status" width="46"></p>
+                    <p>Velocidade Motor: <span id="v_motor_f1">1600rpm</span></p>
                     <p>Temperatura Zona 1: <span id="t_z1_f1">0°C</span></p>
                     <p>Temperatura Zona 2: <span id="t_z2_f1">0°C</span></p>
-                    <p>Temperatura Zona 3: <span id="t_z3_f1">0°C</span></p>
+                    <p>Setpoint: <span id="setpoint_f1">1250°C</span></p>
 
-                    <div class="linha-ajuste">
-                        <label for="setpoint_f1">Setpoint:</label>
-                        <input type="number" id="setpoint_f1" min="500" max="1350" value="1000">
-                        <button class="btn-inline">OK</button>
-                    </div>
-
-                    <div class="linha-ajuste">
-                        <label for="modo_f1">Modo de Operação:</label>
-                        <select id="modo_f1">
-                            <option value="manual">Manual</option>
-                            <option value="auto">Automático</option>
-                        </select>
-                        <button class="btn-inline">OK</button>
-                    </div>
                 </div>
                 <!-- ================= GRÁFICOS DO FORNO 1 ================= -->
                 <div class="graficos-container">
@@ -64,8 +51,8 @@
                     </div>
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f1-z3"></canvas>
-                        <p class="grafico-legenda">Temperatura Zona 3</p>
+                        <canvas id="chart-hist-f1-v"></canvas>
+                        <p class="grafico-legenda">Velocidade Motor</p>
                     </div>
 
                     <div class="grafico-item">
@@ -87,24 +74,10 @@
 
                 <div class="painel-info">
                     <p>Combustível: <span id="combustivel2">Ligado</span><img id="icon_comb2" class="img-combustivel" src="icons/combustivel_ligado.png" alt="Status" width="46"></p>
+                    <p>Velocidade Motor: <span id="v_motor_f2">1600rpm</span></p>
                     <p>Temperatura Zona 1: <span id="t_z1_f2">0°C</span></p>
                     <p>Temperatura Zona 2: <span id="t_z2_f2">0°C</span></p>
-                    <p>Temperatura Zona 3: <span id="t_z3_f2">0°C</span></p>
-
-                    <div class="linha-ajuste">
-                        <label for="setpoint_f2">Setpoint:</label>
-                        <input type="number" id="setpoint_f2" min="500" max="1350" value="1000">
-                        <button class="btn-inline">OK</button>
-                    </div>
-
-                    <div class="linha-ajuste">
-                        <label for="modo_f2">Modo de Operação:</label>
-                        <select id="modo_f2">
-                            <option value="manual">Manual</option>
-                            <option value="auto">Automático</option>
-                        </select>
-                        <button class="btn-inline">OK</button>
-                    </div>
+                    <p>Setpoint: <span id="setpoint_f2">1250°C</span></p>
 
                 </div>
                 <!-- ================= GRÁFICOS DO FORNO 2 ================= -->
@@ -121,8 +94,8 @@
                     </div>
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f2-z3"></canvas>
-                        <p class="grafico-legenda">Temperatura Zona 3</p>
+                        <canvas id="chart-hist-f2-v"></canvas>
+                        <p class="grafico-legenda">Velocidade Motor</p>
                     </div>
 
                     <div class="grafico-item">
