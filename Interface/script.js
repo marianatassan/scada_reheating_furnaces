@@ -1,7 +1,4 @@
-// script.js — IHM Reheating Furnaces (integrado ao seu HTML)
-// Requisitos cumpridos: polling -> GET /furnace_data, POST /setpoint, POST /mode
-// Charts: 3 zonas + setpoint por forno (8 gráficos)
-// Regras de automação implementadas (alarme sonoro + popup + mensagens)
+// script.js — IHM Reheating Furnaces
 
 // CONFIG
 const API_BASE = "http://localhost:8000";
@@ -14,6 +11,9 @@ const MAX_POINTS = 60;
 // Limites
 const TEMP_MIN = 500;   // °C
 const TEMP_MAX = 1350;  // °C
+const TEMP_MIN_Z1 = 840;
+const VELOCIDADE_MIN = 20; // Em %
+const VELOCIDADE_MAX = 90; // Em %
 
 // Helpers para DOM
 const $ = id => document.getElementById(id);
@@ -191,8 +191,45 @@ async function updateDashboard() {
             showAlarmPopup(1, `EMERGÊNCIA: Setpoint fora dos limites de segurança (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
         }
 
-        // -------- Regra 4: Velocidade -----------
-        
+        // -------- Regra 4: Velocidade do Motor do Combustível fora do ideal -----------
+        // Forno 1
+        const f1MotorLow = (last.f1.fuelMotorSpeed < VELOCIDADE_MIN);
+        const f1MotorHigh = (last.f1.fuelMotorSpeed > VELOCIDADE_MAX);
+
+        if (f1MotorLow) {
+            showAlarmPopup(1, `Atenção: Velocidade do motor do combustível muito baixa (< ${VELOCIDADE_MIN}%). Verificar se há problemas de ignição/fluxo.`);
+        }
+
+        if (f1MotorHigh) {
+            showAlarmPopup(1, `Atenção: Velocidade do motor do combustível muito alta (> ${VELOCIDADE_MAX}%). Verificar a eficiência e o setpoint.`);
+        }
+
+        // Forno 2
+        const f2MotorLow = (last.f2.fuelMotorSpeed < VELOCIDADE_MIN);
+        const f2MotorHigh = (last.f2.fuelMotorSpeed > VELOCIDADE_MAX);
+
+        if (f2MotorLow) {
+            showAlarmPopup(2, `Atenção: Velocidade do motor do combustível muito baixa (< ${VELOCIDADE_MIN}%). Verificar se há problemas de ignição/fluxo.`);
+        }
+
+        if (f2MotorHigh) {
+            showAlarmPopup(2, `Atenção: Velocidade do motor do combustível muito alta (> ${VELOCIDADE_MAX}%). Verificar a eficiência e o setpoint.`);
+        }
+
+        // -------- Regra 5: Combustível Ligado, mas Zona 1 Crítica Baixa (Risco de Segurança) -----------
+        // Forno 1
+        const f1FuelOnAndCold = (last.f1.isFuelOn === true) && (last.f1.z1 < TEMP_MIN_Z1);
+
+        if (f1FuelOnAndCold) {
+            showAlarmPopup(1, `Atenção: Combustível ligado, mas a Temperatura da Zona 1 está abaixo do limite de segurança (${TEMP_MIN_SEGURANCA} °C). RISCO! Desligar imediatamente o combustível e verificar a ignição.`);
+        }
+
+        // Forno 2
+        const f2FuelOnAndCold = (last.f2.isFuelOn === true) && (last.f2.z1 < TEMP_MIN_Z1);
+
+        if (f2FuelOnAndCold) {
+            showAlarmPopup(2, `Atenção: Combustível ligado, mas a Temperatura da Zona 1 está abaixo do limite de segurança (${TEMP_MIN_SEGURANCA} °C). RISCO! Desligar imediatamente o combustível e verificar a ignição.`);
+        }
 
     } catch (err) {
         console.error("Erro updateDashboard:", err);
