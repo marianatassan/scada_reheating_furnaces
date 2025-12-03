@@ -16,17 +16,16 @@
     </head>
 
     <body>
+        <div id="popup-alarm-container"></div>
         <header>
             <h1>Reheating Furnaces SCADA</h1>
         </header>
 
         <div class="fornos-container">
-
-            <!-- ===================== FORNO 1 ===================== -->
             <div class="forno">
                 <div class="forno-esquerda">
-                    <img class="img-forno" src="icons/forno1.png" alt="Furnace 1" width="250" height="190">
-                    <h2>Furnace 1</h2>
+                    <img class="img-forno" src="icons/forno1.png" alt="Furnace" width="250" height="190">
+                    <h2>Walking-Beam Furnace</h2>
                 </div>
 
                 <div class="painel-info">
@@ -37,77 +36,55 @@
                     <p>Setpoint: <span id="setpoint_f1">1250°C</span></p>
 
                 </div>
-                <!-- ================= GRÁFICOS DO FORNO 1 ================= -->
+                <!-- ================= GRÁFICOS EM TEMPO REAL ================= -->
                 <div class="graficos-container">
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f1-z1"></canvas>
+                        <canvas id="chart-f1-z1"></canvas>
                         <p class="grafico-legenda">Temperatura Zona 1</p>
                     </div>
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f1-z2"></canvas>
+                        <canvas id="chart-f1-z2"></canvas>
                         <p class="grafico-legenda">Temperatura Zona 2</p>
                     </div>
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f1-v"></canvas>
+                        <canvas id="chart-f1-v"></canvas>
                         <p class="grafico-legenda">Velocidade Motor</p>
                     </div>
 
                     <div class="grafico-item">
-                        <canvas id="chart-hist-f1-sp"></canvas>
+                        <canvas id="chart-f1-sp"></canvas>
                         <p class="grafico-legenda">Setpoint</p>
                     </div>
 
                 </div>
-                <div class="alarme" id="alarme_f1">⚠ Setpoint fora da faixa permitida!</div>
             </div>
-
-
-            <!-- ===================== FORNO 2 ===================== -->
-            <div class="forno">
-                <div class="forno-esquerda">
-                    <img class="img-forno" src="icons/forno1.png" alt="Furnace 2" width="250" height="190">
-                    <h2>Furnace 2</h2>
+            <h2 class="titulo">Dados Históricos</h2>
+            <!-- ================= GRÁFICOS HISTÓRICOS ================= -->
+            <div class="graficos-historico">
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-z1"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 1</p>
                 </div>
 
-                <div class="painel-info">
-                    <p>Combustível: <span id="combustivel2">Ligado</span><img id="icon_comb2" class="img-combustivel" src="icons/combustivel_ligado.png" alt="Status" width="46"></p>
-                    <p>Velocidade Motor: <span id="v_motor_f2">1600rpm</span></p>
-                    <p>Temperatura Zona 1: <span id="t_z1_f2">0°C</span></p>
-                    <p>Temperatura Zona 2: <span id="t_z2_f2">0°C</span></p>
-                    <p>Setpoint: <span id="setpoint_f2">1250°C</span></p>
-
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-z2"></canvas>
+                    <p class="grafico-legenda">Temperatura Zona 2</p>
                 </div>
-                <!-- ================= GRÁFICOS DO FORNO 2 ================= -->
-                <div class="graficos-container">
 
-                    <div class="grafico-item">
-                        <canvas id="chart-hist-f2-z1"></canvas>
-                        <p class="grafico-legenda">Temperatura Zona 1</p>
-                    </div>
-
-                    <div class="grafico-item">
-                        <canvas id="chart-hist-f2-z2"></canvas>
-                        <p class="grafico-legenda">Temperatura Zona 2</p>
-                    </div>
-
-                    <div class="grafico-item">
-                        <canvas id="chart-hist-f2-v"></canvas>
-                        <p class="grafico-legenda">Velocidade Motor</p>
-                    </div>
-
-                    <div class="grafico-item">
-                        <canvas id="chart-hist-f2-sp"></canvas>
-                        <p class="grafico-legenda">Setpoint</p>
-                    </div>
-
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-v"></canvas>
+                    <p class="grafico-legenda">Velocidade Motor</p>
                 </div>
-                <div class="alarme" id="alarme_f2">⚠ Setpoint fora da faixa permitida!</div>
+
+                <div class="grafico-item">
+                    <canvas id="chart-hist-f1-sp"></canvas>
+                    <p class="grafico-legenda">Setpoint</p>
+                </div>
 
             </div>
-
 
         </div>
 

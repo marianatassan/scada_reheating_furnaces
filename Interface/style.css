@@ -28,15 +28,14 @@ header {
 .fornos-container {
     background-color: #cccccc;
     padding: 20px;
-    padding-bottom: 100px; 
+    padding-bottom: 70px; 
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding-left: 45px;
-    justify-content: flex-start;
-    gap: 45px;
+    gap: 25px;
 }
 
 .forno {
@@ -93,28 +92,29 @@ header {
     align-items: flex-end;
 }
 
-.alarme { 
-    background-color: #ff4c4c;
-    color: white;
-    padding: 8px;
-    border-radius: 5px;
-    display: none;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink { 
-    0%, 100% {opacity: 1;}
-    50% {opacity: 0.5;}
-}
-
 .graficos-container {
-    width: 800px;
+    width: 850px;
     display: grid;
-    position: fixed;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     margin-top: 16px;
-    margin-left: 560px;
+    margin-left: 20px;
     gap: 0 53px;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    color: #333;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.graficos-historico {
+    width: 1350px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0 50px;
 }
 
 .grafico-item {
@@ -135,9 +135,66 @@ header {
     background: white;
     border-radius: 5px;
     width: 125% !important;
-    height: 160px !important;
+    height: 200px !important;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
+
+.graficos-historico canvas {
+    margin-top: 0px;
+    background: white;
+    border-radius: 5px;
+    width: 110% !important;
+    height: 190px !important;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+}
+
+#popup-alarm-container {
+    position: relative;
+    z-index: 999999999999999; /* acima de tudo */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none; /* não atrapalha cliques nos elementos atrás */
+}
+
+.popup-alarm {
+    z-index: 999999999999999;
+    background: #ffdddd;
+    color: black;
+    border-left: 6px solid #ff3b3b;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    font-family: Arial, sans-serif;
+    min-width: 260px;
+    max-width: 350px;
+    animation: slideIn 0.35s ease-out;
+    pointer-events: auto; /* usuário ainda pode clicar no X */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-alarm button {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #aa0000;
+    margin-left: 10px;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 
 footer {
     background-color: var(--bg-footer-color);

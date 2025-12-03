@@ -26,14 +26,6 @@ class ServidorModBus:
             f1_fuel = random.choice([0, 1])         # desligado/ligado
             f1_vel_motor = random.uniform(0, 1800)
             f1_setpoint = random.uniform(495, 1355)
-                    
-
-            # -------- Furnace 2 --------
-            f2_temp_z1 = random.uniform(846, 1045)
-            f2_temp_z2 = random.uniform(1045, 1255)
-            f2_fuel = random.choice([0, 1])
-            f2_vel_motor = random.uniform(0, 1800)
-            f2_setpoint = random.uniform(495, 1355)
 
 
             # =======================================================
@@ -47,13 +39,6 @@ class ServidorModBus:
             print(f"  Combustível: {'Ligado' if f1_fuel else 'Desligado'}")
             print(f"  Velocidade Motor: {f1_vel_motor:.2f} rpm")
             print(f"  Setpoint: {f1_setpoint:.2f}")
-
-            print("\nFURNACE 2:")
-            print(f"  Z1: {f2_temp_z1:.2f} °C")
-            print(f"  Z2: {f2_temp_z2:.2f} °C")
-            print(f"  Combustível: {'Ligado' if f2_fuel else 'Desligado'}")
-            print(f"  Velocidade Motor: {f2_vel_motor:.2f} rpm")
-            print(f"  Setpoint: {f2_setpoint:.2f}")
 
 
             # =======================================================
@@ -74,13 +59,6 @@ class ServidorModBus:
             self._server.data_bank.set_holding_registers(1004, [f1_fuel])
             self._server.data_bank.set_holding_registers(1005, encode_float(f1_vel_motor))
             self._server.data_bank.set_holding_registers(1007, encode_float(f1_setpoint))
-
-            # Furnace 2
-            self._server.data_bank.set_holding_registers(1009, encode_float(f2_temp_z1))
-            self._server.data_bank.set_holding_registers(1011, encode_float(f2_temp_z2))
-            self._server.data_bank.set_holding_registers(1013, [f2_fuel])
-            self._server.data_bank.set_holding_registers(1014, encode_float(f2_vel_motor))
-            self._server.data_bank.set_holding_registers(1016, encode_float(f2_setpoint))
 
 
             time.sleep(sleep_time)

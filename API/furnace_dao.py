@@ -28,12 +28,7 @@ class FurnaceDAO:
                 "f1_fuel_state": row[3],
                 "f1_vel_motor": row[4],
                 "f1_setpoint": row[5],
-                "f2_temp_zone1": row[6],
-                "f2_temp_zone2": row[7],
-                "f2_fuel_state": row[8],
-                "f2_vel_motor": row[9],
-                "f2_setpoint": row[10],
-                "timestamp": row[11]
+                "timestamp": row[6]
             }
 
             return data
@@ -70,6 +65,40 @@ class FurnaceDAO:
             if conn:
                 conn.close()
 
+    def get_history(self):
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT f1_temp_zone1, f1_temp_zone2, f1_fuel_state, f1_vel_motor, f1_setpoint, timestamp
+                FROM furnace_data
+                ORDER BY id DESC
+                LIMIT 50
+            """)
+
+            rows = cursor.fetchall()
+
+            return [
+                {
+                    "f1_temp_zone1": r[0],
+                    "f1_temp_zone2": r[1],
+                    "f1_fuel_state": r[2],
+                    "f1_vel_motor": r[3],
+                    "f1_setpoint": r[4],
+                    "timestamp": r[5]
+                }
+                for r in rows
+            ]
+
+        except sqlite3.Error as e:
+            print(f"Erro ao acessar o banco SQLite: {e}")
+            return []
+        finally:
+            if conn:
+                conn.close()
+
+
     # ==========================================================
     #   INSERT DATA
     # ==========================================================
@@ -86,11 +115,9 @@ class FurnaceDAO:
             INSERT INTO furnace_data (
                 f1_temp_zone1, f1_temp_zone2,
                 f1_fuel_state, f1_vel_motor, f1_setpoint,
-                f2_temp_zone1, f2_temp_zone2,
-                f2_fuel_state, f2_vel_motor, f2_setpoint,
                 timestamp
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             """
 
             cursor.execute(insert_query, (
@@ -99,11 +126,6 @@ class FurnaceDAO:
                 data["f1_fuel_state"],
                 data["f1_vel_motor"],
                 data["f1_setpoint"],
-                data["f2_temp_zone1"],
-                data["f2_temp_zone2"],
-                data["f2_fuel_state"],
-                data["f2_vel_motor"],
-                data["f2_setpoint"],
                 data.get("timestamp", None)
             ))
 
