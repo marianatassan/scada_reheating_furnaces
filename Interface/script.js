@@ -68,10 +68,9 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
         data: {
             labels: [],
             datasets: [{
-                label: label,
-                data: [],
-                borderColor: "red",
-                tension: 0.25,
+                borderColor: "blue",
+                borderWidth: 1,
+                tension: 0.1,
                 pointRadius: 2,
                 fill: false
             }]
@@ -83,15 +82,21 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
                 x: {
                     ticks: {
                         font: {
-                            size: 6  // tamanho da fonte dos valores do eixo X
-                        }
+                            size: 8
+                        },
+                        maxTicksLimit: 5,
+                        autoSkip: true 
+                    },
+                    grid: {
+                        display: false 
                     }
                 },
                 y: {
                     ticks: {
                         font: {
-                            size: 6  // tamanho da fonte dos valores do eixo Y
-                        }
+                            size: 8
+                        },
+                        maxTicksLimit: 5
                     }
                 }
             },
@@ -99,6 +104,7 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
         }
     });
 }
+
 
 function createHistoryChart(canvasId, label) {
     const el = document.getElementById(canvasId);
@@ -110,8 +116,10 @@ function createHistoryChart(canvasId, label) {
                 label,
                 data: [],
                 borderColor: "blue",
+                borderWidth: 1,
                 tension: 0.2,
-                pointRadius: 0
+                pointRadius: 0,
+                fill: false
             }]
         },
         options: {
@@ -121,15 +129,19 @@ function createHistoryChart(canvasId, label) {
                 x: {
                     ticks: {
                         font: {
-                            size: 6  // tamanho da fonte dos valores do eixo X
-                        }
+                            size: 8  // tamanho da fonte dos valores do eixo X
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 3,
+                        maxRotation: 180
                     }
                 },
                 y: {
                     ticks: {
                         font: {
-                            size: 6  // tamanho da fonte dos valores do eixo Y
-                        }
+                            size: 8  // tamanho da fonte dos valores do eixo Y
+                        },
+                        maxTicksLimit: 6
                     }
                 }
             },
@@ -158,15 +170,18 @@ const chartsHistory = {
 
 function updateChart(chart, value) {
     if (!chart) return;
-    const now = new Date().toLocaleTimeString();
+
+    const now = new Date().toLocaleTimeString("pt-BR", { hour12: false }); 
     chart.data.labels.push(now);
     chart.data.datasets[0].data.push(value);
+
     if (chart.data.labels.length > MAX_POINTS) {
         chart.data.labels.shift();
         chart.data.datasets[0].data.shift();
     }
     chart.update("none");
 }
+
 
 // ======================================================
 //  ESTADO LOCAL
@@ -220,20 +235,20 @@ async function updateDashboard() {
         const f1z1Abnormal = (last.f1.z1 < 850 || last.f1.z1 > 1050);
         const f1z2Abnormal = (last.f1.z2 < 1050 || last.f1.z2 > 1260);
 
-       // if (f1z1Abnormal) showAlarmPopup(1, `Temperatura da zona 1 fora do intervalo esperado (850 - 1050 °C). Verificar!`);
-       // if (f1z2Abnormal) showAlarmPopup(1, `Temperatura da zona 2 fora do intervalo esperado (1050 - 1260 °C). Verificar!`);
+        if (f1z1Abnormal) showAlarmPopup(1, `Temperatura da zona 1 fora do intervalo esperado (850 - 1050 °C). Verificar!`);
+        if (f1z2Abnormal) showAlarmPopup(1, `Temperatura da zona 2 fora do intervalo esperado (1050 - 1260 °C). Verificar!`);
 
         const f1Out = (last.f1.setpoint < TEMP_MIN) || (last.f1.setpoint > TEMP_MAX);
-        //if (f1Out) showAlarmPopup(1, `EMERGÊNCIA: Setpoint fora dos limites de segurança (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
+        if (f1Out) showAlarmPopup(1, `EMERGÊNCIA: Setpoint fora dos limites de segurança (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
 
         const f1MotorLow = last.f1.v < VELOCIDADE_MIN;
         const f1MotorHigh = last.f1.v > VELOCIDADE_MAX;
 
-       // if (f1MotorLow) showAlarmPopup(1, `Velocidade do motor muito baixa (< ${VELOCIDADE_MIN}%).`);
-       // if (f1MotorHigh) showAlarmPopup(1, `Velocidade do motor muito alta (> ${VELOCIDADE_MAX}%).`);
+        if (f1MotorLow) showAlarmPopup(1, `Velocidade do motor muito baixa (< ${VELOCIDADE_MIN}%).`);
+        if (f1MotorHigh) showAlarmPopup(1, `Velocidade do motor muito alta (> ${VELOCIDADE_MAX}%).`);
 
         const f1FuelOnAndCold = (last.f1.fuel === 1) && (last.f1.z1 < TEMP_MIN_Z1);
-        //if (f1FuelOnAndCold) showAlarmPopup(1, `Combustível ligado e temperatura baixa (< ${TEMP_MIN_Z1} °C). RISCO!`);
+        if (f1FuelOnAndCold) showAlarmPopup(1, `Combustível ligado e temperatura baixa (< ${TEMP_MIN_Z1} °C). RISCO!`);
 
         // Charts
         if (last.f1.z1 != null) updateChart(charts.f1.z1, last.f1.z1);
@@ -247,8 +262,8 @@ async function updateDashboard() {
 }
 
 function populateHistoryCharts(history) {
-    const labels = history.map(x => x.timestamp);
 
+    const labels = history.map(x => x.timestamp);
     chartsHistory.z1.data.labels = labels;
     chartsHistory.z1.data.datasets[0].data = history.map(x => x.f1_temp_zone1);
 
@@ -267,13 +282,17 @@ function populateHistoryCharts(history) {
     chartsHistory.sp.update();
 }
 
-loadHistory()
-    .then(history => {
-        populateHistoryCharts(history);
-        console.log("Histórico carregado:", history.length, "registros");
-    })
-    .catch(err => console.error("Erro ao carregar histórico:", err));
 
-// start polling
+// Atualização normal (cada 2s)
 setInterval(updateDashboard, POLL_INTERVAL_MS);
-updateDashboard();
+
+// Atualização do histórico
+setInterval(async () => {
+    try {
+        const h = await loadHistory();
+        populateHistoryCharts(h);
+        console.log("Histórico atualizado automaticamente");
+    } catch (e) {
+        console.error("Erro ao atualizar histórico:", e);
+    }
+}, 10000); // 100 segundos

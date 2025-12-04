@@ -13,7 +13,6 @@ body {
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    min-height: 100vh;
 }
 
 header {
@@ -71,7 +70,7 @@ header {
     color: #000;
     justify-content: flex-start;
     gap: 4px;
-    overflow: hidden; 
+    
 }
 
 /* Inputs e labels */
@@ -148,63 +147,48 @@ header {
     box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
 
-#popup-alarm-container {
-    position: relative;
-    z-index: 999999999999999; /* acima de tudo */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none; /* não atrapalha cliques nos elementos atrás */
-}
-
-.popup-alarm {
-    z-index: 999999999999999;
-    background: #ffdddd;
-    color: black;
-    border-left: 6px solid #ff3b3b;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-    font-family: Arial, sans-serif;
-    min-width: 260px;
-    max-width: 350px;
-    animation: slideIn 0.35s ease-out;
-    pointer-events: auto; /* usuário ainda pode clicar no X */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.popup-alarm button {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #aa0000;
-    margin-left: 10px;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-
 footer {
     background-color: var(--bg-footer-color);
-    padding: 1px;
-    text-align: center;
+    align-items: center;
     color: #cccccc;
     font-size: 10px;
     width: 100%;
-    height: 56px;
+    height: 60px;
     position: fixed;
     bottom: 0;
     left: 0;
+}
+
+#popup-alarm-container {
+    width: 100vw;
+    position: fixed;
+    /* Z-index muito alto */
+    z-index: 999999999999999; 
+    gap: 12px;
+}
+
+.popup-alarm {
+    background: #ffdddd;
+    color: black;
+    border-left: 6px solid #ff3b3b;
+    margin-left: 500px;
+    padding: 20px 25px; 
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+    font-family: Arial, sans-serif;
+    min-width: 350px; 
+    max-width: 500px;
+    
+    /* Reativa os cliques para o botão fechar */
+    pointer-events: auto; 
+    
+    /* Animação que faz o alarme "saltar" */
+    animation: pulse 0.4s ease-out, slideIn 0.35s ease-out;
+}
+
+/* * Animação de pulso/salto
+ */
+@keyframes pulse {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

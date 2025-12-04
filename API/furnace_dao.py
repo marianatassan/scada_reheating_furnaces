@@ -73,9 +73,11 @@ class FurnaceDAO:
             cursor.execute("""
                 SELECT f1_temp_zone1, f1_temp_zone2, f1_fuel_state, f1_vel_motor, f1_setpoint, timestamp
                 FROM furnace_data
-                ORDER BY id DESC
-                LIMIT 50
+                WHERE timestamp >= datetime('now', '-4 hours')
+                ORDER BY timestamp DESC
+                LIMIT 500
             """)
+
 
             rows = cursor.fetchall()
 
