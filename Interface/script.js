@@ -80,16 +80,8 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
             responsive: true,
             scales: {
                 x: {
-                    ticks: {
-                        font: {
-                            size: 8
-                        },
-                        maxTicksLimit: 5,
-                        autoSkip: true 
-                    },
-                    grid: {
-                        display: false 
-                    }
+                    ticks: { display: false },
+                    grid: { display: false }
                 },
                 y: {
                     ticks: {
@@ -106,49 +98,55 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
 }
 
 
+// cria gráfico de histórico (cada dataset espera data: [{x:..., y:...}, ...])
 function createHistoryChart(canvasId, label) {
     const el = document.getElementById(canvasId);
     return new Chart(el, {
         type: "line",
         data: {
-            labels: [],
             datasets: [{
                 label,
-                data: [],
+                data: [],                      // receberá {x:ms, y:val}
                 borderColor: "blue",
-                borderWidth: 1,
-                tension: 0.2,
-                pointRadius: 0,
-                fill: false
+                borderWidth: 1.5,
+                tension: 0.2,                 // suaviza levemente
+                pointRadius: 0,               // sem pontos individuais
+                fill: false,
+                spanGaps: false
             }]
         },
         options: {
             animation: false,
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute',
+                        displayFormats: {
+                            minute: 'HH:mm:ss'
+                        }
+                    },
                     ticks: {
-                        font: {
-                            size: 8  // tamanho da fonte dos valores do eixo X
-                        },
-                        autoSkip: true,
-                        maxTicksLimit: 3,
-                        maxRotation: 180
+                        source: 'auto',
+                        font: { size: 10 },
+                        maxTicksLimit: 4
                     }
                 },
                 y: {
                     ticks: {
-                        font: {
-                            size: 8  // tamanho da fonte dos valores do eixo Y
-                        },
+                        font: { size: 10 },
                         maxTicksLimit: 6
-                    }
+                    },
+                    grid: { color: 'rgba(0,0,0,0.04)' }
                 }
             },
             plugins: { legend: { display: false } }
         }
     });
 }
+
 
 
 const charts = {
@@ -244,8 +242,8 @@ async function updateDashboard() {
         const f1MotorLow = last.f1.v < VELOCIDADE_MIN;
         const f1MotorHigh = last.f1.v > VELOCIDADE_MAX;
 
-        if (f1MotorLow) showAlarmPopup(1, `Velocidade do motor muito baixa (< ${VELOCIDADE_MIN}%).`);
-        if (f1MotorHigh) showAlarmPopup(1, `Velocidade do motor muito alta (> ${VELOCIDADE_MAX}%).`);
+        if (f1MotorLow) showAlarmPopup(1, `Velocidade do motor muito baixa (< ${VELOCIDADE_MIN} rpm).`);
+        if (f1MotorHigh) showAlarmPopup(1, `Velocidade do motor muito alta (> ${VELOCIDADE_MAX} rpm).`);
 
         const f1FuelOnAndCold = (last.f1.fuel === 1) && (last.f1.z1 < TEMP_MIN_Z1);
         if (f1FuelOnAndCold) showAlarmPopup(1, `Combustível ligado e temperatura baixa (< ${TEMP_MIN_Z1} °C). RISCO!`);
@@ -261,26 +259,41 @@ async function updateDashboard() {
     }
 }
 
+// popula os históricos corretamente com pontos {x: ms, y: value}
 function populateHistoryCharts(history) {
 
-    const labels = history.map(x => x.timestamp);
+    const labels = history.map(x => new Date(x.timestamp).getTime());
+
     chartsHistory.z1.data.labels = labels;
-    chartsHistory.z1.data.datasets[0].data = history.map(x => x.f1_temp_zone1);
+    chartsHistory.z1.data.datasets[0].data = history.map(x => ({
+        x: new Date(x.timestamp).getTime(),
+        y: x.f1_temp_zone1
+    }));
 
     chartsHistory.z2.data.labels = labels;
-    chartsHistory.z2.data.datasets[0].data = history.map(x => x.f1_temp_zone2);
+    chartsHistory.z2.data.datasets[0].data = history.map(x => ({
+        x: new Date(x.timestamp).getTime(),
+        y: x.f1_temp_zone2
+    }));
 
     chartsHistory.vel.data.labels = labels;
-    chartsHistory.vel.data.datasets[0].data = history.map(x => x.f1_vel_motor);
+    chartsHistory.vel.data.datasets[0].data = history.map(x => ({
+        x: new Date(x.timestamp).getTime(),
+        y: x.f1_vel_motor
+    }));
 
     chartsHistory.sp.data.labels = labels;
-    chartsHistory.sp.data.datasets[0].data = history.map(x => x.f1_setpoint);
+    chartsHistory.sp.data.datasets[0].data = history.map(x => ({
+        x: new Date(x.timestamp).getTime(),
+        y: x.f1_setpoint
+    }));
 
     chartsHistory.z1.update();
     chartsHistory.z2.update();
     chartsHistory.vel.update();
     chartsHistory.sp.update();
 }
+
 
 
 // Atualização normal (cada 2s)
@@ -295,4 +308,4 @@ setInterval(async () => {
     } catch (e) {
         console.error("Erro ao atualizar histórico:", e);
     }
-}, 10000); // 100 segundos
+}, 100000); // 100 segundos
