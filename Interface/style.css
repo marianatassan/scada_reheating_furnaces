@@ -57,10 +57,6 @@ header {
     color: #333;
 }
 
-/* garante que cada imagem mantenha mesmo espaço */
-.img-forno {
-    margin-right: 6px;
-}
 
 .painel-info {
     border-radius: 10px;

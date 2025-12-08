@@ -53,12 +53,11 @@ class ServidorModBus:
             #           ESCRITA NOS REGISTRADORES HOLDING
             # =======================================================
 
-            # Furnace 1
+            # Furnace
             self._server.data_bank.set_holding_registers(1000, encode_float(f1_temp_z1))
             self._server.data_bank.set_holding_registers(1002, encode_float(f1_temp_z2))
             self._server.data_bank.set_holding_registers(1004, [f1_fuel])
-            self._server.data_bank.set_holding_registers(1005, encode_float(f1_vel_motor))
-            self._server.data_bank.set_holding_registers(1007, encode_float(f1_setpoint))
-
+            self._server.data_bank.set_holding_registers(1006, encode_float(f1_vel_motor))
+            self._server.data_bank.set_holding_registers(1008, encode_float(f1_setpoint))
 
             time.sleep(sleep_time)

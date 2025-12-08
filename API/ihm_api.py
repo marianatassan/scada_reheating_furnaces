@@ -40,8 +40,8 @@ cliente = ClienteModBus(
         "f1_temp_zone1": 1000,
         "f1_temp_zone2": 1002,
         "f1_fuel_state": 1004,
-        "f1_vel_motor":1005,
-        "f1_setpoint": 1007,
+        "f1_vel_motor":1006,
+        "f1_setpoint": 1008,
     },
     read_time=5,
     db_path="furnaces_database.db"
@@ -84,17 +84,10 @@ def get_last_data():
 
     return row
 
-# ============================================================
-#   ROTA PRINCIPAL — RETORNO DO ÚLTIMO DADO DA TABELA
-#   (modelo do Robson, porém usando seu DAO e suas tags)
-# ============================================================
 @app.get("/history")
 def get_last_history():
 
-    # Lê do Modbus e insere uma linha no banco
     cliente.read_once()
-
-    # Busca o último registro (DAO seu, não do Robson)
     rows = FurnaceDB.get_history()
 
     return rows

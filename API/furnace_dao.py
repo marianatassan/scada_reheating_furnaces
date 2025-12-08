@@ -73,7 +73,7 @@ class FurnaceDAO:
             cursor.execute("""
                 SELECT f1_temp_zone1, f1_temp_zone2, f1_fuel_state, f1_vel_motor, f1_setpoint, timestamp
                 FROM furnace_data
-                WHERE timestamp >= datetime('now', 'localtime', '-1 hour')
+                WHERE timestamp >= datetime('now', 'localtime', '-0.5 hour')
                 ORDER BY timestamp DESC
             """)
 
