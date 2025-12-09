@@ -6,27 +6,20 @@ const FURNACE_ENDPOINT = "/furnace_data";
 const HISTORY_ENDPOINT = "/history"
 const SETPOINT_ENDPOINT = "/setpoint";
 const MODE_ENDPOINT = "/mode";
-const POLL_INTERVAL_MS = 5000;
-const MAX_POINTS = 60;
+const POLL_INTERVAL_MS = 4000;
+const MAX_POINTS = 5;
 
 // Limites
 const TEMP_MIN = 500;   // °C
 const TEMP_MAX = 1350;  // °C
-const TEMP_MAX_Z1 = 1042;
+const TEMP_MAX_Z1 = 1044;
 const VELOCIDADE_MIN = 180;
 const VELOCIDADE_MAX = 1620;
 
-// Helpers para DOM
 const $ = id => document.getElementById(id);
 
-// Som do alarme
 const alarmAudio = $("somAlarme");
 
-// ======================================================
-//  NOVO SISTEMA DE ALARMES POP-UP
-// ======================================================
-
-// Garante que existe o container de pop-up no DOM
 let popupContainer = document.getElementById("popup-alarm-container");
 if (!popupContainer) {
     popupContainer = document.createElement("div");
@@ -34,7 +27,6 @@ if (!popupContainer) {
     document.body.appendChild(popupContainer);
 }
 
-// Função GENÉRICA de pop-up (moderna)
 function showAlarm(message, duration = 6000) {
     try {
         alarmAudio.currentTime = 0;
@@ -52,14 +44,10 @@ function showAlarm(message, duration = 6000) {
     popupContainer.appendChild(alarm);
 }
 
-// Mantém compatibilidade com sua função antiga
 function showAlarmPopup(forno, message) {
     showAlarm(`⚠ Forno ${forno}: ${message}`);
 }
 
-// ======================================================
-//  CHARTS (Chart.js)
-// ======================================================
 function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
     const el = document.getElementById(canvasId);
     if (!el) return null;
@@ -68,10 +56,10 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
         data: {
             labels: [],
             datasets: [{
-                borderColor: "blue",
+                borderColor: "#00b300",
                 borderWidth: 1,
-                tension: 0.1,
-                pointRadius: 2,
+                tension: 0.5,
+                pointRadius: 1.5,
                 fill: false
             }]
         },
@@ -98,7 +86,6 @@ function createLineChart(canvasId, label = "°C", yMax = TEMP_MAX + 50) {
 }
 
 
-// cria gráfico de histórico (cada dataset espera data: [{x:..., y:...}, ...])
 function createHistoryChart(canvasId, label) {
     const el = document.getElementById(canvasId);
     return new Chart(el, {
@@ -106,11 +93,11 @@ function createHistoryChart(canvasId, label) {
         data: {
             datasets: [{
                 label,
-                data: [],                      // receberá {x:ms, y:val}
-                borderColor: "blue",
+                data: [],
+                borderColor: "#75BDD5",
                 borderWidth: 1.5,
-                tension: 0.2,                 // suaviza levemente
-                pointRadius: 0,               // sem pontos individuais
+                tension: 0.3,
+                pointRadius: 0,        
                 fill: false,
                 spanGaps: false
             }]
@@ -230,11 +217,11 @@ async function updateDashboard() {
 
         // -------------------- Regras de automação --------------------
 
-        const f1z1Abnormal = (last.f1.z1 < 850 || last.f1.z1 > 1040);
-        const f1z2Abnormal = (last.f1.z2 < 1050 || last.f1.z2 > 1250);
+        const f1z1Abnormal = (last.f1.z1 < 847 || last.f1.z1 > 1043);
+        const f1z2Abnormal = (last.f1.z2 < 1047 || last.f1.z2 > 1253);
 
-        if (f1z1Abnormal) showAlarmPopup(1, `Temperatura da zona 1 fora do intervalo esperado (850 - 1050 °C). Verificar!`);
-        if (f1z2Abnormal) showAlarmPopup(1, `Temperatura da zona 2 fora do intervalo esperado (1050 - 1260 °C). Verificar!`);
+        if (f1z1Abnormal) showAlarmPopup(1, `Temperatura da zona 1 fora do intervalo esperado (850 - 1040 °C). Verificar!`);
+        if (f1z2Abnormal) showAlarmPopup(1, `Temperatura da zona 2 fora do intervalo esperado (1050 - 1250 °C). Verificar!`);
 
         const f1Out = (last.f1.setpoint < TEMP_MIN) || (last.f1.setpoint > TEMP_MAX);
         if (f1Out) showAlarmPopup(1, `EMERGÊNCIA: Setpoint fora dos limites de segurança (${TEMP_MIN}–${TEMP_MAX} °C). Verificar!`);
@@ -296,7 +283,7 @@ function populateHistoryCharts(history) {
 
 
 
-// Atualização normal (cada 2s)
+// Atualização tempo real (cada 2s)
 setInterval(updateDashboard, POLL_INTERVAL_MS);
 
 // Atualização do histórico
@@ -308,4 +295,4 @@ setInterval(async () => {
     } catch (e) {
         console.error("Erro ao atualizar histórico:", e);
     }
-}, 100000); // 100 segundos
+}, 100000); 

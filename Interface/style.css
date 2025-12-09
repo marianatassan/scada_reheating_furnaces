@@ -2,7 +2,7 @@
     --bg-color: #CCCCCC;
     --text-color: #cccccc;
     --font-family: 'Roboto', sans-serif;
-    --bg-footer-color: #696a75;
+    --bg-footer-color: #878790;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
 }
 
 header {
-    background-color: #696a75;
+    background-color: #878790;
     padding: 1px;
     font-size: 10px;
     text-align: center;
@@ -26,14 +26,13 @@ header {
 
 .fornos-container {
     background-color: #cccccc;
-    padding: 20px;
-    padding-bottom: 70px; 
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-left: 45px;
+    padding-top: 45px;
     gap: 25px;
 }
 
@@ -129,7 +128,7 @@ header {
 
 /* cada card do gráfico */
 .graficos-container canvas {
-    background: white;
+    background: #EaEaEa;
     border-radius: 10px;
     width: 125% !important;
     height: 200px !important;
@@ -138,7 +137,7 @@ header {
 
 .graficos-historico canvas {
     margin-top: 0px;
-    background: white;
+    background: #EaEaEa;
     border-radius: 10px;
     width: 110% !important;
     height: 190px !important;
@@ -158,30 +157,42 @@ footer {
 }
 
 #popup-alarm-container {
-    width: 100vw;
     position: fixed;
-    /* Z-index muito alto */
     z-index: 999999999999999; 
-    gap: 12px;
 }
 
 .popup-alarm {
-    background: #ffdddd;
-    color: black;
-    border-left: 6px solid #ff3b3b;
-    margin-left: 500px;
-    padding: 20px 25px; 
+    background: #ffebee;
+    color: #232323;
+    border: 1px solid #ffcdd2;
+    padding: 12px 16px;
+    margin: 8px 0;
+    margin-left: 10px;
+    border-left: 8px solid #d32f2f;
     border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-    font-family: Arial, sans-serif;
-    min-width: 350px; 
-    max-width: 500px;
-    
-    /* Reativa os cliques para o botão fechar */
-    pointer-events: auto; 
-    
-    /* Animação que faz o alarme "saltar" */
-    animation: pulse 0.4s ease-out, slideIn 0.35s ease-out;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+/* Botão X sem caixa */
+.popup-alarm button {
+    background: transparent;   /* tira a caixa */
+    border: none;              /* sem borda */
+    color: #b71c1c;            /* mesma cor do texto */
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;         /* AFSTA do texto */
+}
+
+.popup-alarm button:hover {
+    color: #7f0000;            /* escurece ao hover */
+    transform: scale(1.1);
+    transition: 0.15s;
 }
 
 /* * Animação de pulso/salto

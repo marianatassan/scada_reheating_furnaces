@@ -9,7 +9,7 @@ class ServidorModBus:
     def __init__(self, host_ip: str, porta: int) -> None:
         self._server = ModbusServer(host=host_ip, port=porta, no_block=True)
 
-    def run(self, sleep_time: int = 5) -> None:
+    def run(self, sleep_time: int = 2) -> None:
         print("Iniciando servidor Modbus TCP...")
         self._server.start()
         print(f"\nServidor Modbus TCP iniciado em {self._server.host}:{self._server.port}")
@@ -24,7 +24,7 @@ class ServidorModBus:
             f1_temp_z1 = random.uniform(845, 1045)
             f1_temp_z2 = random.uniform(1045, 1255)
             f1_fuel = random.choice([0, 1])         # desligado/ligado
-            f1_vel_motor = random.uniform(0, 1800)
+            f1_vel_motor = random.uniform(177, 1640)
             f1_setpoint = random.uniform(495, 1355)
 
 
