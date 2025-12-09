@@ -9,7 +9,7 @@ class ServidorModBus:
     def __init__(self, host_ip: str, porta: int) -> None:
         self._server = ModbusServer(host=host_ip, port=porta, no_block=True)
 
-    def run(self, sleep_time: int = 2) -> None:
+    def run(self, sleep_time: int = 5) -> None:
         print("Iniciando servidor Modbus TCP...")
         self._server.start()
         print(f"\nServidor Modbus TCP iniciado em {self._server.host}:{self._server.port}")

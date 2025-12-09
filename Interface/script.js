@@ -6,13 +6,13 @@ const FURNACE_ENDPOINT = "/furnace_data";
 const HISTORY_ENDPOINT = "/history"
 const SETPOINT_ENDPOINT = "/setpoint";
 const MODE_ENDPOINT = "/mode";
-const POLL_INTERVAL_MS = 2000;
+const POLL_INTERVAL_MS = 5000;
 const MAX_POINTS = 60;
 
 // Limites
 const TEMP_MIN = 500;   // °C
 const TEMP_MAX = 1350;  // °C
-const TEMP_MIN_Z1 = 840;
+const TEMP_MAX_Z1 = 1042;
 const VELOCIDADE_MIN = 180;
 const VELOCIDADE_MAX = 1620;
 
@@ -230,8 +230,8 @@ async function updateDashboard() {
 
         // -------------------- Regras de automação --------------------
 
-        const f1z1Abnormal = (last.f1.z1 < 850 || last.f1.z1 > 1050);
-        const f1z2Abnormal = (last.f1.z2 < 1050 || last.f1.z2 > 1260);
+        const f1z1Abnormal = (last.f1.z1 < 850 || last.f1.z1 > 1040);
+        const f1z2Abnormal = (last.f1.z2 < 1050 || last.f1.z2 > 1250);
 
         if (f1z1Abnormal) showAlarmPopup(1, `Temperatura da zona 1 fora do intervalo esperado (850 - 1050 °C). Verificar!`);
         if (f1z2Abnormal) showAlarmPopup(1, `Temperatura da zona 2 fora do intervalo esperado (1050 - 1260 °C). Verificar!`);
@@ -245,8 +245,8 @@ async function updateDashboard() {
         if (f1MotorLow) showAlarmPopup(1, `Velocidade do motor muito baixa (< ${VELOCIDADE_MIN} rpm).`);
         if (f1MotorHigh) showAlarmPopup(1, `Velocidade do motor muito alta (> ${VELOCIDADE_MAX} rpm).`);
 
-        const f1FuelOnAndCold = (last.f1.fuel === 1) && (last.f1.z1 < TEMP_MIN_Z1);
-        if (f1FuelOnAndCold) showAlarmPopup(1, `Combustível ligado e temperatura baixa (< ${TEMP_MIN_Z1} °C). RISCO!`);
+        const f1FuelOnAndCold = (last.f1.fuel === 1) && (last.f1.z1 > TEMP_MAX_Z1);
+        if (f1FuelOnAndCold) showAlarmPopup(1, `Combustível ligado e temperatura alta (> ${TEMP_MAX_Z1} °C). RISCO!`);
 
         // Charts
         if (last.f1.z1 != null) updateChart(charts.f1.z1, last.f1.z1);
